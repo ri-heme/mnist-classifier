@@ -22,7 +22,7 @@ def train(config: DictConfig):
     model: CNN = hydra.utils.instantiate(config.model)
 
     # Init logger
-    logger = WandbLogger(project="mnist-classifier", name=config.name, log_model=False)
+    logger = WandbLogger(project="mnist-classifier", id=config.name, log_model=False)
 
     # Init trainer
     trainer: Trainer = hydra.utils.instantiate(
