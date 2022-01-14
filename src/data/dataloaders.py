@@ -28,7 +28,7 @@ class CorruptedMNIST(Dataset):
         return self.images.shape[0]
 
     def __getitem__(self, idx):
-        image = torch.Tensor(self.images[idx])
+        image = torch.Tensor(self.images[idx, np.newaxis])
         label = torch.LongTensor(self.labels[[idx]])
         return image, label
 
