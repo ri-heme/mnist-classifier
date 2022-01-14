@@ -1,0 +1,10 @@
+# @package _global_
+
+name: "test"
+
+training:
+  max_epochs: 10
+  precision: "bf16"
+
+model:
+  lr: 0.001
