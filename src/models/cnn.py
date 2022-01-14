@@ -28,8 +28,8 @@ class CNN(LightningModule):
         )
         self.training_accuracy = Accuracy(average="macro", num_classes=num_classes)
         self.validation_accuracy = Accuracy(average="macro", num_classes=num_classes)
-        self.training_confmat = ConfusionMatrix(num_classes=num_classes)
-        self.validation_confmat = ConfusionMatrix(num_classes=num_classes)
+        self.training_confmat = ConfusionMatrix(normalize="true", num_classes=num_classes)
+        self.validation_confmat = ConfusionMatrix(normalize="true", num_classes=num_classes)
         self.save_hyperparameters()
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
