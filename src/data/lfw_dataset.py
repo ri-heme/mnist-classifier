@@ -2,32 +2,38 @@
 LFW dataloading
 """
 import argparse
+import enum
 import time
+import tarfile
+from pathlib import Path
 
 import numpy as np
 import torch
 from PIL import Image
+from torch.utils import data
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
+from dotenv import find_dotenv
 
 
 class LFWDataset(Dataset):
-    def __init__(self, path_to_folder: str, transform) -> None:
-        # TODO: fill out with what you need
+    def __init__(self, transform) -> None:
+        base_path = Path(find_dotenv(), "..", "data", "external", "lfw-deepfunneled")
+        self.images = []
+        for image_path in base_path.glob("**/*.jpg"):
+            self.images.append(image_path)
         self.transform = transform
-        
-        
+
     def __len__(self):
-        return None # TODO: fill out
+        return len(self.images)
     
     def __getitem__(self, index: int) -> torch.Tensor:
-        # TODO: fill out
-        return self.transform(img)
+        image = Image.open(self.images[index])
+        return self.transform(image)
 
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-path_to_folder', default='', type=str)
     parser.add_argument('-batch_size', default=512, type=int)
     parser.add_argument('-num_workers', default=None, type=int)
     parser.add_argument('-visualize_batch', action='store_true')
@@ -42,7 +48,7 @@ if __name__ == '__main__':
     ])
     
     # Define dataset
-    dataset = LFWDataset(args.path_to_folder, lfw_trans)
+    dataset = LFWDataset(lfw_trans)
     
     # Define dataloader
     dataloader = DataLoader(
@@ -53,8 +59,20 @@ if __name__ == '__main__':
     )
     
     if args.visualize_batch:
-        # TODO: visualize a batch of images
-        pass
+        import matplotlib.pyplot as plt
+        from torchvision.utils import make_grid
+        from torchvision.transforms.functional import to_pil_image
+        plt.rcParams["savefig.bbox"] = 'tight'
+        nrow = 8
+        batch = iter(dataloader).next()
+        grid = list(make_grid(batch[:nrow,:,:,:], nrow))
+        fig, axs = plt.subplots(ncols=len(grid), squeeze=False)
+        for i, img in enumerate(grid):
+            img = to_pil_image(img.detach())
+            axs[0, i].imshow(np.asarray(img))
+            axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
+        save_path = Path(find_dotenv(), "..", "models", "lfw", "lfw.png")
+        fig.savefig(save_path)
         
     if args.get_timing:
         # lets do some repetitions
