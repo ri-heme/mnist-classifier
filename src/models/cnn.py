@@ -28,8 +28,10 @@ class CNN(LightningModule):
         )
         self.training_accuracy = Accuracy(average="macro", num_classes=num_classes)
         self.validation_accuracy = Accuracy(average="macro", num_classes=num_classes)
+        self.test_accuracy = Accuracy(average="macro", num_classes=num_classes)
         self.training_confmat = ConfusionMatrix(normalize="true", num_classes=num_classes)
         self.validation_confmat = ConfusionMatrix(normalize="true", num_classes=num_classes)
+        self.test_confmat = ConfusionMatrix(normalize="true", num_classes=num_classes)
         self.save_hyperparameters()
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
@@ -45,7 +47,7 @@ class CNN(LightningModule):
         Parameters
         ----------
         batch : torch.Tensor
-        mode : {'training', 'validation'}
+        mode : {'training', 'validation', 'test'}
 
         Returns
         -------
@@ -76,7 +78,7 @@ class CNN(LightningModule):
 
         Parameters
         ----------
-        mode : {'training', 'validation'}
+        mode : {'training', 'validation', 'test'}
         """
         # Compute & log accuracy
         accuracy = getattr(self, f"{mode}_accuracy")
@@ -99,6 +101,12 @@ class CNN(LightningModule):
 
     def validation_epoch_end(self, outputs: torch.Tensor) -> None:
         self.epoch_end("validation")
+
+    def test_step(self, batch: torch.Tensor, batch_idx) -> torch.Tensor:
+        return self.step(batch, "test")
+
+    def test_epoch_end(self, outputs: torch.Tensor) -> None:
+        self.epoch_end("test")
 
     def forward(self, x):
         residual = self.conv(x)

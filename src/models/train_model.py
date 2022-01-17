@@ -30,6 +30,8 @@ def train(config: DictConfig):
     )
     trainer.fit(model, train_dataloader)
 
+    trainer.test(model, test_dataloader)
+
     # Close
     wandb.finish()
 
