@@ -1,0 +1,5 @@
+outs:
+- md5: f7db0f3500fc628d4cbf108af9d426fb.dir
+  size: 62911
+  nfiles: 1
+  path: mnist-classifier
