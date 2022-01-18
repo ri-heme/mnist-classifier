@@ -1,3 +1,5 @@
+__all__ = ["CNN"]
+
 from typing import Dict, List
 
 import torch
