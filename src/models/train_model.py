@@ -25,9 +25,7 @@ def train(config: DictConfig):
     logger = WandbLogger(project="mnist-classifier", id=config.name, log_model=False)
 
     # Init trainer
-    trainer: Trainer = hydra.utils.instantiate(
-        config.training, logger=logger, weights_save_path=WEIGHTS_PATH
-    )
+    trainer: Trainer = hydra.utils.instantiate(config.training, logger=logger, weights_save_path=WEIGHTS_PATH)
     trainer.fit(model, train_dataloader)
 
     trainer.test(model, test_dataloader)
