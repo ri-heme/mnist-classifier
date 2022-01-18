@@ -99,6 +99,6 @@ class PredictionModule(LightningModule):
         self.logger.experiment.log({"confusion_matrix": confmat})
 
     @classmethod
-    def load_from_checkpoint(cls, experiment: str) -> LightningModule:
-        path = checkpoint_path(experiment)
+    def load_from_checkpoint(cls, project: str, experiment: str) -> LightningModule:
+        path = checkpoint_path(project, experiment)
         return super().load_from_checkpoint(path)

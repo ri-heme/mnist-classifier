@@ -10,7 +10,7 @@ CONF_PATH = ROOT_PATH / "conf"
 WEIGHTS_PATH = ROOT_PATH / "models"
 
 
-def checkpoint_path(experiment: str, project: str = "mnist-classifier") -> Path:
+def checkpoint_path(project: str, experiment: str) -> Path:
     try:
         return next(WEIGHTS_PATH.joinpath(project, experiment).glob("**/*.ckpt"))
     except StopIteration:
