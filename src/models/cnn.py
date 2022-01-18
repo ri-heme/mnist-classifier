@@ -1,6 +1,7 @@
 import torch
 from pytorch_lightning import LightningModule
 from torch import nn
+from torch.nn import functional as F
 from torchmetrics import Accuracy, ConfusionMatrix
 
 
@@ -18,7 +19,7 @@ class CNN(LightningModule):
             nn.BatchNorm2d(num_planes),
         )
         self.fc = nn.Sequential(
-            nn.ReLU(), nn.AvgPool2d(num_planes), nn.Flatten(), nn.Linear(num_planes, num_classes), nn.LogSoftmax(dim=1)
+            nn.ReLU(), nn.AvgPool2d(num_planes), nn.Flatten(), nn.Linear(num_planes, num_classes)
         )
         self.training_accuracy = Accuracy(average="macro", num_classes=num_classes)
         self.validation_accuracy = Accuracy(average="macro", num_classes=num_classes)
@@ -45,7 +46,7 @@ class CNN(LightningModule):
         """
         # Do forward pass
         x, y = batch
-        logits = self(x)
+        logits = F.log_softmax(self(x), dim=1)
 
         # Calculate loss and predictions
         criterion = nn.NLLLoss()
