@@ -40,12 +40,12 @@ class PredictionModule(LightningModule):
 
         # Do forward pass
         x, y = batch
-        logits = F.log_softmax(self(x), dim=1)
+        probs = F.log_softmax(self(x), dim=1)
 
         # Calculate loss and predictions
         criterion = nn.NLLLoss()
-        loss = criterion(logits, y.view(-1))
-        preds = logits.exp().argmax(dim=1)
+        loss = criterion(probs, y.view(-1))
+        preds = probs.exp().argmax(dim=1)
 
         # Update training/validation confusion matrix with step's values
         # Note: predictions & labels must be flattened: N-dimensional
