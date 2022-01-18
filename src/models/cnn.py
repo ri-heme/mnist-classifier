@@ -1,7 +1,8 @@
 import torch
-from torch import nn
 from pytorch_lightning import LightningModule
+from torch import nn
 from torchmetrics import Accuracy, ConfusionMatrix
+
 
 class CNN(LightningModule):
     def __init__(self, num_planes=8, num_classes=10, lr=0.01, weight_decay=0):
