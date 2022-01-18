@@ -7,6 +7,8 @@ from torch.nn import functional as F
 from torchmetrics import Accuracy
 from wandb.plot import confusion_matrix
 
+from src.path import checkpoint_path
+
 
 class CNN(LightningModule):
     def __init__(self, num_planes=8, num_classes=10, lr=0.01, weight_decay=0):
@@ -96,6 +98,11 @@ class CNN(LightningModule):
         # SEE ALSO: wandb.sklearn.plot_confusion_matrix(targets, preds, classes)
         confmat = confusion_matrix(y_true=targets, preds=preds, class_names=classes)
         self.logger.experiment.log({"confusion_matrix": confmat})
+
+    @classmethod
+    def load_from_checkpoint(cls, experiment: str) -> LightningModule:
+        path = checkpoint_path(experiment)
+        return super().load_from_checkpoint(path)
 
     def forward(self, x):
         residual = self.conv(x)
