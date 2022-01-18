@@ -1,10 +1,9 @@
-# @package _global_
-
 defaults:
   - _self_  # so this config is overriden by all the others
   - training: default.yaml  # defines default training hyperparameters
   - model: default.yaml  # defines default model hyperparameters
   - experiment: null
 
+project: mnist-classifier
 name: null
 batch_size: 64
