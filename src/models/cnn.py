@@ -9,23 +9,16 @@ class CNN(LightningModule):
         super().__init__()
         if not (8 <= num_planes <= 14):
             raise ValueError(f"Number of planes must be between 8-14. Got {num_planes}.")
-        self.conv = nn.Sequential(
-            nn.Conv2d(1, num_planes, 7, padding=3, stride=2, bias=False),
-            nn.ReLU()
-        )
+        self.conv = nn.Sequential(nn.Conv2d(1, num_planes, 7, padding=3, stride=2, bias=False), nn.ReLU())
         self.stack = nn.Sequential(
             nn.Conv2d(num_planes, num_planes, 3, padding=1, stride=1, bias=False),
             nn.BatchNorm2d(num_planes),
             nn.ReLU(),
             nn.Conv2d(num_planes, num_planes, 3, padding=1, stride=1, bias=False),
-            nn.BatchNorm2d(num_planes),     
+            nn.BatchNorm2d(num_planes),
         )
         self.fc = nn.Sequential(
-            nn.ReLU(),
-            nn.AvgPool2d(num_planes),
-            nn.Flatten(),
-            nn.Linear(num_planes, num_classes),
-            nn.LogSoftmax(dim=1)
+            nn.ReLU(), nn.AvgPool2d(num_planes), nn.Flatten(), nn.Linear(num_planes, num_classes), nn.LogSoftmax(dim=1)
         )
         self.training_accuracy = Accuracy(average="macro", num_classes=num_classes)
         self.validation_accuracy = Accuracy(average="macro", num_classes=num_classes)
@@ -36,11 +29,7 @@ class CNN(LightningModule):
         self.save_hyperparameters()
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
-        return torch.optim.Adam(
-            self.parameters(),
-            weight_decay=self.hparams.weight_decay,
-            lr=self.hparams.lr
-        )
+        return torch.optim.Adam(self.parameters(), weight_decay=self.hparams.weight_decay, lr=self.hparams.lr)
 
     def step(self, batch: torch.Tensor, mode: str) -> torch.Tensor:
         """Computes loss and updates the confusion matrix at every step.
@@ -69,9 +58,7 @@ class CNN(LightningModule):
         getattr(self, f"{mode}_confmat")(preds, y.view(-1))
 
         # Log loss at every step
-        self.log(
-            f"{mode}_loss", loss, on_step=True, on_epoch=True, prog_bar=True
-        )
+        self.log(f"{mode}_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
         return loss
 
     def epoch_end(self, mode: str) -> None:
@@ -85,7 +72,7 @@ class CNN(LightningModule):
         accuracy = getattr(self, f"{mode}_accuracy")
         self.log(f"{mode}_accuracy", accuracy.compute())
         accuracy.reset()
-    
+
         # Compute & log confusion matrix
         confmat = getattr(self, f"{mode}_confmat")
         self.logger.log_image("confusion_matrix", [confmat.compute()])

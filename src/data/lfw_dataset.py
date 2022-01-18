@@ -58,17 +58,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    lfw_trans = transforms.Compose(
-        [transforms.RandomAffine(5, (0.1, 0.1), (0.5, 2.0)), transforms.ToTensor()]
-    )
+    lfw_trans = transforms.Compose([transforms.RandomAffine(5, (0.1, 0.1), (0.5, 2.0)), transforms.ToTensor()])
 
     # Define dataset
     dataset = LFWDataset(lfw_trans)
 
     # Define dataloader
-    dataloader = DataLoader(
-        dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers
-    )
+    dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     if args.visualize_batch:
         nrow = 8
