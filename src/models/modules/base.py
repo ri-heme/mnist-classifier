@@ -24,7 +24,7 @@ class PredictionModule(LightningModule):
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
         lr: float = self.hparams.get("lr")
-        weight_decay: float = self.hparams.get("weight_decay")
+        weight_decay: float = self.hparams.get("weight_decay", 0)
         return torch.optim.Adam(self.parameters(), weight_decay=weight_decay, lr=lr)
 
     def step(self, batch: torch.Tensor, mode: str) -> Dict[str, torch.Tensor]:

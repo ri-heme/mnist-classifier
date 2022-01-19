@@ -23,6 +23,10 @@ class Distiller(LightningModule):
     def temperature(self) -> float:
         return self.hparams.get("temperature", 1.0)
 
+    def configure_optimizers(self) -> torch.optim.Optimizer:
+        lr = self.hparams.get("lr")
+        return torch.optim.Adam(self.parameters(), lr=lr)
+
     def training_step(self, batch, _):
         x, y = batch
 
