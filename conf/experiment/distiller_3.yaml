@@ -1,0 +1,17 @@
+# @package _global_
+
+project: mnist-classifier-distiller
+name: habanero
+
+defaults:
+  - override /model: distiller.yaml
+
+training:
+  max_epochs: 10
+
+model:
+  temperature: 10
+  teacher:
+    experiment: version_1
+  student:
+    hidden_features: 2
