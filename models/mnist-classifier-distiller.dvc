@@ -1,0 +1,5 @@
+outs:
+- md5: 11e963bdc70d9972d774b0a93b1a330d.dir
+  size: 143490
+  nfiles: 2
+  path: mnist-classifier-distiller
