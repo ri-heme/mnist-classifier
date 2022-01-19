@@ -1,0 +1,12 @@
+# @package _global_
+
+name: spiky-cactus
+
+defaults:
+  - override /model: shallow.yaml
+
+training:
+  max_epochs: 10
+
+model:
+  hidden_features: 2

@@ -1,0 +1,13 @@
+_target_: src.models.Distiller
+
+temperature: 1.5
+lr: 0.01
+
+teacher:
+  _target_: src.models.CNN.load_from_checkpoint
+  project: mnist-classifier
+  experiment: null
+
+student:
+  _target_: src.models.ShallowNN
+  hidden_features: 397

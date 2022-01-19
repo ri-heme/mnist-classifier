@@ -1,28 +1,24 @@
-from pathlib import Path
+__all__ = []
 
 import hydra
 import wandb
-from dotenv import find_dotenv
 from omegaconf import DictConfig
-from pytorch_lightning import Trainer
+from pytorch_lightning import LightningModule, Trainer
 from pytorch_lightning.loggers import WandbLogger
 
 from src.data.dataloaders import dataloaders
-from src.models.cnn import CNN
-
-CONF_PATH = Path(find_dotenv(), "..", "conf").as_posix()
-WEIGHTS_PATH = Path(find_dotenv(), "..", "models").as_posix()
+from src.path import CONF_PATH, WEIGHTS_PATH
 
 
-@hydra.main(config_path=CONF_PATH, config_name="main")
+@hydra.main(config_path=CONF_PATH.as_posix(), config_name="main")
 def train(config: DictConfig):
     train_dataloader, test_dataloader = dataloaders(config.batch_size)
 
     # Init model
-    model: CNN = hydra.utils.instantiate(config.model)
+    model: LightningModule = hydra.utils.instantiate(config.model)
 
     # Init logger
-    logger = WandbLogger(project="mnist-classifier", id=config.name, log_model=False)
+    logger = WandbLogger(project=config.project, id=config.name, log_model=True)
 
     # Init trainer
     trainer: Trainer = hydra.utils.instantiate(config.training, logger=logger, weights_save_path=WEIGHTS_PATH)

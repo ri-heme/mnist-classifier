@@ -1,4 +1,4 @@
-_target_: src.models.cnn.CNN
+_target_: src.models.CNN
 
 num_planes: 8
 num_classes: 10

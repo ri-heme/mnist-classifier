@@ -1,0 +1,17 @@
+# @package _global_
+
+project: mnist-classifier-distiller
+name: h34t-rises
+
+defaults:
+  - override /model: distiller.yaml
+
+training:
+  max_epochs: 10
+
+model:
+  temperature: 2
+  teacher:
+    experiment: version_1
+  student:
+    hidden_features: 2
