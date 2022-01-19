@@ -12,6 +12,10 @@ from wandb.plot import confusion_matrix
 from src.path import checkpoint_path
 
 
+def unpack_outputs(outputs: List[Dict[str, torch.Tensor]], key: str) -> torch.Tensor:
+    return torch.cat([step_output[key] for step_output in outputs])
+
+
 class PredictionModule(LightningModule):
     def __init__(self, num_classes):
         super().__init__()
@@ -87,11 +91,8 @@ class PredictionModule(LightningModule):
         return self.step(batch, "test")
 
     def test_epoch_end(self, outputs: List[Dict[str, torch.Tensor]]) -> None:
-        def cat_outputs(key: str) -> torch.Tensor:
-            return torch.cat([step_output[key] for step_output in outputs])
-
-        preds = cat_outputs("preds").numpy()
-        targets = cat_outputs("targets").numpy()
+        preds = unpack_outputs(outputs, "preds").numpy()
+        targets = unpack_outputs(outputs, "targets").numpy()
         classes = list(map(int, range(10)))
 
         # SEE ALSO: wandb.sklearn.plot_confusion_matrix(targets, preds, classes)
