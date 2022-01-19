@@ -1,7 +1,7 @@
 __all__ = ["CNN"]
 
-from torch import nn
 import torch
+from torch import nn
 
 from src.models.modules.base import PredictionModule
 

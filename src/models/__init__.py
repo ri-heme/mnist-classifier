@@ -1,3 +1,3 @@
-__all__ = ["CNN"]
+__all__ = ["CNN", "Distiller", "ShallowNN"]
 
-from src.models.modules import CNN
+from src.models.modules import CNN, Distiller, ShallowNN

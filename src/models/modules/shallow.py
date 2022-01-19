@@ -1,7 +1,6 @@
 __all__ = ["ShallowNN"]
 
 import torch
-from pytorch_lightning import LightningModule
 from torch import nn
 
 from src.models.modules.base import PredictionModule
